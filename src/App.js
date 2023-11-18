@@ -11,59 +11,27 @@ import './App.css';
 import 'tachyons';
 
 
-
-const PAT = '6902f7f07b49416384f777e8be34838b';
-const USER_ID = 'datnt0609';
-const APP_ID = 'test';
-const MODEL_ID = 'face-detection';
-const MODEL_VERSION_ID = '6dc7e46bc9124c5c8824be4822abe105';
-
-const RequestResponse = (imageUrl) =>{
-    const raw = JSON.stringify({
-        "user_app_id": {
-            "user_id": USER_ID,
-            "app_id": APP_ID
-        },
-        "inputs": [
-            {
-                "data": {
-                    "image": {
-                        "url": imageUrl
-                    }
-                }
-            }
-        ]
-    });
-
-    const requestOptions = {
-        method: 'POST',
-        headers: {
-            'Accept': 'application/json',
-            'Authorization': 'Key ' + PAT
-        },
-        body: raw
-    };
-    return requestOptions;
+const initialState = {
+    input: '',
+    imageURL: '',
+    box: {},
+    route: 'signin',
+    isSignedin: false,
+    user: {
+        id: '',
+        name: '',
+        email: '',
+        entries: 0,
+        joined: ''
+    }
 }
 
 class App extends Component {
     constructor() {
         super();
-        this.state = {
-            input : '',
-            imageURL:'',
-            box: {},
-            route:'signin',
-            isSignedin :false,
-            user:{
-                id : '',
-                name : '',
-                email : '',
-                entries: 0,
-                joined :''
-            }
-        }
+        this.state = initialState;
     }
+
 
     loadUser=(data)=>{
         this.setState({user:{
@@ -97,7 +65,14 @@ class App extends Component {
 
     onButtonSubmit = () =>{
         this.setState({imageUrl: this.state.input })
-        fetch("https://api.clarifai.com/v2/models/" + MODEL_ID + "/versions/" + MODEL_VERSION_ID + "/outputs",   RequestResponse(this.state.input))
+        // fetch("https://api.clarifai.com/v2/models/" + MODEL_ID + "/versions/" + MODEL_VERSION_ID + "/outputs",   RequestResponse(this.state.input))
+        fetch('http://localhost:3000/imageurl', {
+            method: 'post',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                input: this.state.input
+            })
+        })
             .then(response => response.json())
             .then(result => {
                 if (result) {
@@ -120,6 +95,8 @@ class App extends Component {
     onRouteChange = (route) =>{
         if (route==='signout'){
             this.setState({isSignedIn:false})
+            this.setState(initialState)
+            // console.log(initialState)
         } else if (route==='home'){
             this.setState({isSignedIn:true})
         }
@@ -155,8 +132,6 @@ class App extends Component {
             </div>
         );
     }
-
 }
-
 
 export default App;
