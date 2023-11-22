@@ -65,7 +65,6 @@ class App extends Component {
 
     onButtonSubmit = () =>{
         this.setState({imageUrl: this.state.input })
-        // fetch("https://api.clarifai.com/v2/models/" + MODEL_ID + "/versions/" + MODEL_VERSION_ID + "/outputs",   RequestResponse(this.state.input))
         fetch('https://face-rec-u55m.onrender.com/imageurl', {
             method: 'post',
             headers: {'Content-Type': 'application/json'},
@@ -76,7 +75,7 @@ class App extends Component {
             .then(response => response.json())
             .then(result => {
                 if (result) {
-                    fetch('https://face-rec-u55m.onrender.com/image', {
+                    fetch('https://backend-face-rec-api.onrender.com/image', {
                         method: 'put',
                         headers: {'Content-Type': 'application/json'},
                         body: JSON.stringify({
@@ -126,8 +125,6 @@ class App extends Component {
                         ? <Signin loadUser={this.loadUser} onRouteChange={this.onRouteChange}/>
                             : <Register loadUser={this.loadUser} onRouteChange={this.onRouteChange}/>
                     )
-
-
                 }
             </div>
         );
