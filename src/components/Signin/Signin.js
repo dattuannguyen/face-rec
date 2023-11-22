@@ -15,7 +15,7 @@ class Signin extends React.Component {
     }
 
     onSubmitSignIn = () =>{
-        fetch('https://face-rec-u55m.onrender.com/signin',{
+        fetch('https://backend-face-rec-api.onrender.com/signin',{
             method : 'post',
             headers : {'Content-Type': 'application/json'},
             body: JSON.stringify({
